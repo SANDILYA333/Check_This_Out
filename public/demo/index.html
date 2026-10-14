@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VoiceCheckout Demo Store</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 24px; max-width: 600px; color: #222; }
+    .card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin: 16px 0; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .total { font-size: 1.5em; font-weight: bold; margin: 16px 0; color: #1a202c; }
+    button { padding: 10px 18px; font-size: 0.95em; margin: 4px; border-radius: 6px; cursor: pointer; border: 1px solid #cbd5e0; background: #edf2f7; font-weight: 500; }
+    button.primary { background: #3182ce; color: #fff; border-color: #2b6cb0; }
+    .section-title { font-size: 1.1em; font-weight: 600; margin-bottom: 8px; }
+  </style>
+</head>
+<body data-voicecheckout-demo="true">
+  <h1>Controlled Demo Store</h1>
+  <p style="color: #718096; font-size: 0.9em;">This is the team-owned controlled demo checkout page for VoiceCheckout testing.</p>
+
+  <div class="card" data-testid="product-card">
+    <div class="section-title">Product</div>
+    <h2>Pressure Cooker</h2>
+    <p>A high-quality 5L pressure cooker for fast, safe home cooking.</p>
+    <p>Price: <strong>₹1,499</strong></p>
+  </div>
+
+  <div class="total" data-testid="checkout-total">
+    Total Amount: ₹1,499
+  </div>
+
+  <div class="card" data-testid="address-summary">
+    <div class="section-title">Delivery Address</div>
+    <p><strong>Fictional Demo Address:</strong></p>
+    <p>Flat 101, Shanti Nagar, Main Road, Hyderabad 500001</p>
+    <div style="margin-top: 12px;">
+      <button data-testid="change-address">Change Address</button>
+      <button class="primary" data-testid="confirm-address">Confirm Address</button>
+    </div>
+  </div>
+
+  <div class="card" data-testid="payment-method">
+    <div class="section-title">Payment Method</div>
+    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+      <input type="radio" name="payment-method" checked readonly />
+      <span>Simulated UPI Payment</span>
+    </label>
+    <div style="margin-top: 12px;">
+      <button class="primary" data-testid="continue-to-review">Continue to Review</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Order Review</div>
+    <p>Item: Pressure Cooker (₹1,499)</p>
+    <p>Payment: Simulated UPI</p>
+    <div style="margin-top: 12px;">
+      <button class="primary" data-testid="confirm-review">Confirm Review</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Simulated UPI Handoff</div>
+    <p style="color: #c53030; font-weight: 600;">⚠️ Safety reminder: Never share your UPI PIN or OTP with anyone.</p>
+    <div style="margin-top: 12px;">
+      <button class="primary" data-testid="confirm-upi-handoff">Confirm Simulated UPI Handoff</button>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top: 32px; background: #f7fafc; border: 1px dashed #cbd5e0;">
+    <div class="section-title">🧪 Demo Scenario Selector (Developer Simulation)</div>
+    <p style="font-size: 0.85em; color: #4a5568;">Select the simulated outcome for payment testing:</p>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
+      <button onclick="setDemoScenario('pending_then_success')">Pending → Success (Default)</button>
+      <button onclick="setDemoScenario('immediate_success')">Immediate Success</button>
+      <button onclick="setDemoScenario('immediate_failure')">Immediate Failure</button>
+      <button onclick="setDemoScenario('pending_then_failure')">Pending → Failure</button>
+      <button onclick="setDemoScenario('remains_pending')">Remains Pending</button>
+      <button onclick="setDemoScenario('status_error')">Status Check Error</button>
+    </div>
+    <p id="active-scenario-indicator" style="font-size: 0.8em; color: #2b6cb0; margin-top: 8px; font-weight: bold;">Active Scenario: pending_then_success</p>
+  </div>
+
+  <script>
+    function setDemoScenario(scenario) {
+      document.body.setAttribute('data-voicecheckout-scenario', scenario);
+      document.dispatchEvent(new CustomEvent('voicecheckout:set-scenario', { detail: { scenario } }));
+      var indicator = document.getElementById('active-scenario-indicator');
+      if (indicator) {
+        indicator.textContent = 'Active Scenario: ' + scenario;
+      }
+    }
+  </script>
+
+  <p style="margin-top: 32px; font-size: 0.85em; color: #a0aec0;">VoiceCheckout Demo Checkout Environment</p>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "name": "voicecheckout",
+  "version": "0.1.0",
+  "description": "VoiceCheckout - Chrome extension for voice-guided checkout",
+  "main": "index.html",
+  "scripts": {
+    "build": "rm -rf dist && vite build && vite build --config vite.content.config.ts && tsc --noEmit && cp manifest.json dist/ && cp -r public/icons dist/ && cp dist/public/popup.html dist/popup.html",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/unit/*.test.ts"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.3.5",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.0.0",
+    "typescript": "^5.0.0",
+    "vite": "^4.0.0"
+  },
+  "type": "module"
+}

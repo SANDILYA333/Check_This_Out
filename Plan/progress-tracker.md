@@ -211,8 +211,9 @@ The extension must be user-invoked, highlight verified page controls without cli
 | Manifest V3 validated | Built | `manifest.json` copied to `dist/manifest.json` on build |
 | TypeScript/build passes | Built | `npm run build` succeeds in ~500ms |
 | Typecheck passes | Tested | `npm run typecheck` (`tsc --noEmit`) passes with 0 errors |
-| Unit & Integration tests | Tested | 271 automated tests pass across 22 test suites via `npm run test` |
+| Unit & Integration tests | Tested | 288 automated tests pass across 23 test suites via `npm run test` |
 | End-to-End integration tests | Tested | 24 tests pass in `endToEndIntegration.test.ts` (Scenarios A–H) |
+| Speech synthesis fallback | Tested | 17 tests pass in `speechFallback.test.ts` (voice selection, regional tags, cancellation, cleanup) |
 | Manifest packaging assertions | Tested | 8 tests pass in `manifestPackaging.test.ts` |
 | Order outcome safety invariants | Tested | 32 tests pass in `amazonOrderConfirmation.test.ts` |
 | Mock payment isolation | Tested | Spies confirm 0 calls to mockPaymentService on Amazon path |
@@ -227,10 +228,12 @@ The extension must be user-invoked, highlight verified page controls without cli
 | Duplicate mount prevention | Tested | Verified single instance invariant across repeated invocations |
 | Assistant cleanup & idempotent unmount | Tested | Verified complete DOM removal, observer disconnect, and style reset |
 | Responsive layout & keyboard navigation | Implemented | 360px max layout, 48px touch targets, visible focus, ARIA regions |
+| Movable & Minimizable UI | Implemented | Drag-to-move header and collapsible floating badge with position memory |
 | UPI PIN warning prominent | Tested | "Never tell anyone your PIN." displayed across all languages |
 | Three language dictionaries | Tested | English, Hindi, and Telugu dictionaries share all canonical keys |
 | Bundled audio assets | Tested | 60 valid MP3 files exist in `public/audio/` and packaged in `dist/audio/` |
 | Audio service & interruption | Tested | AudioService handles play, stop, concurrency, and failures gracefully |
+| Speech fallback for Amazon prompts | Tested | Browser SpeechSynthesis fallback for unbundled keys in EN, HI, TE |
 | Language preview controls | Tested | Speaker buttons play language name audio without changing selection |
 | Fixed price ₹1,499 wording | Tested | Aligned in visible text and spoken phrases across all 3 languages |
 | Extension loads in Chrome | NOT RUN | Chrome unavailable in headless test runner; manual test procedure documented |
@@ -244,25 +247,19 @@ The extension must be user-invoked, highlight verified page controls without cli
 - **Content script ES module loading failure in Chrome:** Resolved by building standalone IIFE bundle via `vite.content.config.ts`.
 - **Audio web accessibility in Chrome:** Resolved by adding `web_accessible_resources` for `audio/*` in `manifest.json`.
 - **Audio concurrency glitches:** Mitigated by cancellation token pattern in `AudioService`.
+- **Missing prerecorded MP3s:** Mitigated by graceful browser `speechSynthesis` fallback with BCP-47 regional tagging (`en-IN`, `hi-IN`, `te-IN`) and voice compatibility checks.
 - **Payment boundary leaks:** Mitigated by strict separation of adapters and automated test spies ensuring zero mock payment calls on Amazon paths.
 
-## 13. Session Notes / Milestone 7 Completion Summary
+## 13. Session Notes / Audio Fix and Milestone 7 Completion Summary
 
-### Milestone 7 Completion Summary (Final Hardening & End-to-End Validation)
+### Amazon Guidance Audio Fix (Speech Synthesis Fallback)
 
-- Reviewed full execution path from extension initialization through Shadow DOM mounting, adapter resolution, guidance selection, target highlighting, observer synchronization, and outcome evaluation.
-- Implemented `tests/unit/endToEndIntegration.test.ts` with 24 tests across Scenarios A through H:
-  - Scenario A: Demo lifecycle and isolated `PaymentCoordinator`.
-  - Scenario B: Amazon cart detection and target resolution.
-  - Scenario C: Amazon address, payment, and review progression (read-only, manual checkout).
-  - Scenario D: Conservative confirmation evaluation (unconfirmed on ambiguous/empty cart/conflicting evidence).
-  - Scenario E: Complete isolation of mock payment service from Amazon flows.
-  - Scenario F: Voice and localization text coverage (EN, HI, TE) and safe audio fallback.
-  - Scenario G: Assistant lifecycle, duplicate mount prevention, and clean unmount.
-  - Scenario H: Privacy invariant — exclusion of sensitive inputs (password, CVV, OTP, PIN).
-- Total automated test count increased to 271 passing tests across 22 test suites (0 failures, 0 skipped).
-- Typecheck (`tsc --noEmit`) passes with 0 diagnostics.
-- Production build (`npm run build`) succeeds cleanly, producing `dist/` with valid `manifest.json`, popup HTML, content bundle, icons, and audio.
-- Produced comprehensive release readiness document: `Plan/release-readiness.md`.
-- Final Release Decision: `READY FOR CONTROLLED TESTING`.
+- **Root Cause:** Prerecorded MP3 audio files in `public/audio/` only exist for the 20 demo checkout states. Amazon-specific guidance keys (e.g. `amazon_cart_instruction`, `amazon_address_instruction`) did not have bundled MP3 files on disk, causing `audioAssetResolver.resolveAudioUrl()` to return `null` and `audioService.play()` to emit status `'unavailable'`.
+- **Correction:** Implemented browser-native `speechSynthesis` fallback in `src/audio/speechFallback.ts` and `src/audio/audioService.ts`.
+  - When an MP3 is missing or fails to load, `audioService` seamlessly falls back to the browser's built-in `speechSynthesis` API.
+  - Automatically maps languages to regional BCP-47 tags: `en-IN`, `hi-IN`, `te-IN`.
+  - Searches device voices for compatible matches, gracefully refusing mismatched voices if device voices are known.
+  - Distinguishes UI states: `playing`, `loading`, `fallback` ("Using browser speech..."), `unavailable`, and `failed`.
+  - Seamlessly cancels previous speech on language switch, track switch, or assistant unmount.
+- **Test Coverage:** Added `tests/unit/speechFallback.test.ts` with 17 tests covering all 15 requirements. Total tests: 288 passing tests across 23 test suites. Typecheck and build pass cleanly.
 
