@@ -43,6 +43,26 @@ export const CheckoutFlow: React.FC = () => {
     deliveryInstructions: 'Leave at front door with security',
   });
   const [addressError, setAddressError] = useState<string | null>(null);
+  const [randomCountdown, setRandomCountdown] = useState<number | null>(null);
+
+  // Automated random outcome trigger on arriving at demo payment handoff
+  React.useEffect(() => {
+    if (currentPage === 'checkout_demo_payment' && !isProcessingPayment && !activeOrder) {
+      const outcomes: DemoPaymentOutcome[] = ['success', 'failure', 'pending'];
+      const chosen = outcomes[Math.floor(Math.random() * outcomes.length)];
+      setSimulatedScenario(chosen);
+      setRandomCountdown(2);
+
+      const timer = setTimeout(() => {
+        setRandomCountdown(null);
+        simulatePaymentHandoff(chosen);
+      }, 1400);
+
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+  }, [currentPage]);
 
   const selectedAddress = addresses.find((a) => a.id === selectedAddressId) || addresses[0];
   const selectedDelivery = DELIVERY_OPTIONS.find((d) => d.id === selectedDeliveryId) || DELIVERY_OPTIONS[0];
@@ -571,62 +591,69 @@ export const CheckoutFlow: React.FC = () => {
             ⚠️ Safety Rule: Never share your real UPI PIN, OTP, or password with anyone.
           </div>
 
-          <p style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '12px', color: '#334155' }}>
-            Select a test simulation outcome to trigger:
-          </p>
+          <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px', padding: '16px', marginBottom: '20px', textAlign: 'left' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+              <span style={{ fontSize: '1.2rem' }}>🎲</span>
+              <strong style={{ color: '#166534', fontSize: '0.95rem' }}>Automated Random Simulation Active</strong>
+            </div>
+            <p style={{ fontSize: '0.85rem', color: '#14532d', margin: 0 }}>
+              Instead of asking you to choose, VoiceCheckout automatically selects a random test outcome among <strong>Success</strong>, <strong>Failure</strong>, and <strong>Pending</strong>.
+            </p>
+            <div style={{ marginTop: '10px', fontSize: '0.9rem', color: '#15803d', fontWeight: 600 }}>
+              {randomCountdown !== null
+                ? `🎲 Selected outcome: "${simulatedScenario.toUpperCase()}" • Auto-executing in ${randomCountdown}s...`
+                : `⚡ Processing test simulation (${simulatedScenario.toUpperCase()})...`}
+            </div>
+          </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '24px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
             <button
               className="btn-primary"
-              style={{ background: '#16a34a', borderColor: '#15803d', justifyContent: 'center' }}
+              style={{ background: '#2563eb', borderColor: '#1d4ed8', justifyContent: 'center', padding: '12px 18px', fontSize: '1rem', fontWeight: 700 }}
               onClick={() => {
-                setSimulatedScenario('success');
-                simulatePaymentHandoff();
+                const outcomes: DemoPaymentOutcome[] = ['success', 'failure', 'pending'];
+                const chosen = outcomes[Math.floor(Math.random() * outcomes.length)];
+                simulatePaymentHandoff(chosen);
               }}
-              data-vc-target="simulate-payment-success"
+              data-vc-target="simulate-payment-random"
               disabled={isProcessingPayment}
             >
-              ✓ Simulate Success
+              🎲 Simulate Random Outcome (Success / Failure / Pending)
             </button>
 
-            <button
-              className="btn-primary"
-              style={{ background: '#dc2626', borderColor: '#b91c1c', justifyContent: 'center' }}
-              onClick={() => {
-                setSimulatedScenario('failure');
-                simulatePaymentHandoff();
-              }}
-              data-vc-target="simulate-payment-fail"
-              disabled={isProcessingPayment}
-            >
-              ✕ Simulate Failure
-            </button>
-
-            <button
-              className="btn-primary"
-              style={{ background: '#d97706', borderColor: '#b45309', justifyContent: 'center' }}
-              onClick={() => {
-                setSimulatedScenario('pending');
-                simulatePaymentHandoff();
-              }}
-              data-vc-target="simulate-payment-pending"
-              disabled={isProcessingPayment}
-            >
-              ⏳ Simulate Pending
-            </button>
-
-            <button
-              className="btn-secondary"
-              style={{ background: '#475569', color: '#ffffff', justifyContent: 'center' }}
-              onClick={() => {
-                setSimulatedScenario('unconfirmed');
-                simulatePaymentHandoff();
-              }}
-              data-vc-target="simulate-payment-unconfirmed"
-              disabled={isProcessingPayment}
-            >
-              ❓ Simulate Unconfirmed
-            </button>
+            {/* Hidden/secondary test overrides */}
+            <details style={{ textAlign: 'left', marginTop: '6px', fontSize: '0.85rem', color: '#64748b' }}>
+              <summary style={{ cursor: 'pointer', fontWeight: 600 }}>Manual Test Overrides (Optional)</summary>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', marginTop: '8px' }}>
+                <button
+                  type="button"
+                  style={{ background: '#16a34a', color: '#fff', border: 'none', borderRadius: '4px', padding: '8px', cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}
+                  onClick={() => simulatePaymentHandoff('success')}
+                  data-vc-target="simulate-payment-success"
+                  disabled={isProcessingPayment}
+                >
+                  ✓ Force Success
+                </button>
+                <button
+                  type="button"
+                  style={{ background: '#dc2626', color: '#fff', border: 'none', borderRadius: '4px', padding: '8px', cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}
+                  onClick={() => simulatePaymentHandoff('failure')}
+                  data-vc-target="simulate-payment-fail"
+                  disabled={isProcessingPayment}
+                >
+                  ✕ Force Failure
+                </button>
+                <button
+                  type="button"
+                  style={{ background: '#d97706', color: '#fff', border: 'none', borderRadius: '4px', padding: '8px', cursor: 'pointer', fontSize: '11px', fontWeight: 700 }}
+                  onClick={() => simulatePaymentHandoff('pending')}
+                  data-vc-target="simulate-payment-pending"
+                  disabled={isProcessingPayment}
+                >
+                  ⏳ Force Pending
+                </button>
+              </div>
+            </details>
           </div>
 
           {isProcessingPayment && (

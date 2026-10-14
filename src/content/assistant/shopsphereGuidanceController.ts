@@ -219,6 +219,56 @@ export class ShopSphereGuidanceController {
     }
   }
 
+  public static readonly STAGE_SEQUENCE: readonly ShopSpherePageState[] = [
+    'LANDING',
+    'PRODUCT_DETAILS',
+    'CART',
+    'ADDRESS_SELECTION',
+    'DELIVERY_SELECTION',
+    'PAYMENT_SELECTION',
+    'ORDER_REVIEW',
+    'DEMO_PAYMENT',
+    'ORDER_CONFIRMED',
+  ];
+
+  public nextStep(): void {
+    const seq = ShopSphereGuidanceController.STAGE_SEQUENCE;
+    const currentIndex = seq.indexOf(this.state.pageState);
+    if (currentIndex >= 0 && currentIndex < seq.length - 1) {
+      const nextState = seq[currentIndex + 1];
+      this.updatePageState(nextState);
+      // Dispatch step event so storefront can sync view if listening
+      if (typeof document !== 'undefined') {
+        document.dispatchEvent(new CustomEvent('voicecheckout:next-step', { detail: { nextState } }));
+      }
+    }
+  }
+
+  public prevStep(): void {
+    const seq = ShopSphereGuidanceController.STAGE_SEQUENCE;
+    const currentIndex = seq.indexOf(this.state.pageState);
+    if (currentIndex > 0) {
+      const prevState = seq[currentIndex - 1];
+      this.updatePageState(prevState);
+      // Dispatch step event so storefront can sync view if listening
+      if (typeof document !== 'undefined') {
+        document.dispatchEvent(new CustomEvent('voicecheckout:prev-step', { detail: { prevState } }));
+      }
+    }
+  }
+
+  public hasNextStep(): boolean {
+    const seq = ShopSphereGuidanceController.STAGE_SEQUENCE;
+    const currentIndex = seq.indexOf(this.state.pageState);
+    return currentIndex >= 0 && currentIndex < seq.length - 1;
+  }
+
+  public hasPrevStep(): boolean {
+    const seq = ShopSphereGuidanceController.STAGE_SEQUENCE;
+    const currentIndex = seq.indexOf(this.state.pageState);
+    return currentIndex > 0;
+  }
+
   public destroy(): void {
     this.subscribers.clear();
   }

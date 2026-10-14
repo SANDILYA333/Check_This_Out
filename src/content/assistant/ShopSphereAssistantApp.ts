@@ -56,8 +56,59 @@ export const ShopSphereAssistantApp: React.FC<ShopSphereAssistantAppProps> = ({
     };
   }, [controller]);
 
-  const instructionText = getMessage(state.language, state.instructionKey);
+  const rawInstructionText = getMessage(state.language, state.instructionKey);
   const pinWarningText = getMessage(state.language, 'upi_safety_warning');
+
+  // Compute dynamic instruction text if on review page to reflect current grand total
+  const instructionText = React.useMemo(() => {
+    if (state.instructionKey === 'shopsphere_review_instruction') {
+      const totalAttr = typeof document !== 'undefined' ? document.body.getAttribute('data-vc-total') : null;
+      const totalVal = totalAttr ? parseInt(totalAttr, 10) : 0;
+      if (totalVal > 0) {
+        if (state.language === 'te') {
+          return `కొనసాగడానికి ముందు మీ వస్తువులు, డెలివరీ ఎంపిక, చెల్లింపు పద్ధతి మరియు మొత్తం మొత్తం ₹${totalVal.toLocaleString('en-IN')} రూపాయలను సమీక్షించండి.`;
+        } else if (state.language === 'hi') {
+          return `जारी रखने से पहले अपने आइटम, डिलीवरी विकल्प, भुगतान विधि और कुल राशि ₹${totalVal.toLocaleString('en-IN')} की समीक्षा करें।`;
+        } else {
+          return `Review your items, delivery choice, payment method, and grand total of ₹${totalVal.toLocaleString('en-IN')} before continuing.`;
+        }
+      }
+    }
+    return rawInstructionText;
+  }, [state.language, state.instructionKey, rawInstructionText]);
+
+  // Listen for custom play-total event
+  useEffect(() => {
+    const handlePlayTotalEvent = () => {
+      audioService.play(state.language, 'order_total_spoken');
+    };
+    if (typeof document !== 'undefined') {
+      document.addEventListener('voicecheckout:play-total', handlePlayTotalEvent);
+      return () => {
+        document.removeEventListener('voicecheckout:play-total', handlePlayTotalEvent);
+      };
+    }
+  }, [state.language]);
+
+  // Auto-play audio when state/instruction or language changes
+  const lastPromptRef = useRef<string>('');
+  useEffect(() => {
+    const promptId = `${state.language}:${state.instructionKey}`;
+    if (lastPromptRef.current !== promptId) {
+      lastPromptRef.current = promptId;
+      audioService.play(state.language, state.instructionKey, instructionText).catch(() => {});
+    }
+  }, [state.instructionKey, state.language, instructionText]);
+
+  const handleNextStep = () => {
+    audioService.stop();
+    controller.nextStep();
+  };
+
+  const handlePrevStep = () => {
+    audioService.stop();
+    controller.prevStep();
+  };
 
   const handleLanguageChange = (lang: Language) => {
     audioService.stop();
@@ -323,6 +374,39 @@ export const ShopSphereAssistantApp: React.FC<ShopSphereAssistantAppProps> = ({
           React.createElement('span', null, isAudioActive ? '⏹' : '🔊'),
           React.createElement('span', null, isAudioActive ? 'Stop Audio' : getMessage(state.language, 'replay_instruction'))
         ),
+        state.pageState === 'ORDER_REVIEW' || state.pageState === 'DEMO_PAYMENT'
+          ? React.createElement(
+              'button',
+              {
+                type: 'button',
+                onClick: () => audioService.play(state.language, 'order_total_spoken'),
+                style: {
+                  background: '#f0fdf4',
+                  color: '#15803d',
+                  border: '1px solid #bbf7d0',
+                  borderRadius: '6px',
+                  padding: '8px 12px',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                },
+                title: 'Hear Grand Total in Spoken Audio',
+              },
+              React.createElement('span', null, '🔊'),
+              React.createElement(
+                'span',
+                null,
+                state.language === 'te'
+                  ? 'మొత్తం మొత్తాన్ని వినండి'
+                  : state.language === 'hi'
+                  ? 'कुल राशि सुनें'
+                  : 'Hear Total'
+              )
+            )
+          : null,
         audioNotice
           ? React.createElement(
               'span',
@@ -330,6 +414,68 @@ export const ShopSphereAssistantApp: React.FC<ShopSphereAssistantAppProps> = ({
               audioNotice
             )
           : null
+      ),
+
+      // Next & Previous Step Navigation Controls
+      React.createElement(
+        'div',
+        {
+          style: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '8px',
+            marginTop: '12px',
+            paddingTop: '10px',
+            borderTop: '1px solid #e2e8f0',
+          },
+        },
+        React.createElement(
+          'button',
+          {
+            type: 'button',
+            onClick: handlePrevStep,
+            disabled: !controller.hasPrevStep(),
+            style: {
+              background: '#f1f5f9',
+              color: controller.hasPrevStep() ? '#334155' : '#94a3b8',
+              border: '1px solid #cbd5e1',
+              borderRadius: '6px',
+              padding: '7px 12px',
+              fontSize: '12px',
+              fontWeight: 600,
+              cursor: controller.hasPrevStep() ? 'pointer' : 'default',
+              opacity: controller.hasPrevStep() ? 1 : 0.6,
+            },
+            title: 'Previous instruction',
+          },
+          '← Previous'
+        ),
+        React.createElement(
+          'button',
+          {
+            type: 'button',
+            onClick: handleNextStep,
+            disabled: !controller.hasNextStep(),
+            style: {
+              background: controller.hasNextStep() ? '#2563eb' : '#94a3b8',
+              color: '#ffffff',
+              border: 'none',
+              borderRadius: '6px',
+              padding: '7px 14px',
+              fontSize: '12px',
+              fontWeight: 700,
+              cursor: controller.hasNextStep() ? 'pointer' : 'default',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              boxShadow: controller.hasNextStep() ? '0 2px 4px rgba(37, 99, 235, 0.2)' : 'none',
+            },
+            title: 'Load and play next instruction',
+          },
+          React.createElement('span', null, 'Next Instruction'),
+          React.createElement('span', null, '→')
+        )
       ),
 
       // Safety PIN Warning on checkout payment stages

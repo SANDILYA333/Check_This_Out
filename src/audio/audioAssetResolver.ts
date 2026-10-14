@@ -24,18 +24,23 @@ export const AUDIO_ASSET_KEYS: ReadonlySet<MessageKey> = new Set<MessageKey>([
   'audio_unavailable',
   'audio_playback_failed',
   'unsupported_page',
+  // ShopSphere dedicated neural voice assets
+  'shopsphere_landing_instruction',
+  'shopsphere_product_instruction',
+  'shopsphere_cart_instruction',
+  'shopsphere_address_instruction',
+  'shopsphere_delivery_instruction',
+  'shopsphere_payment_instruction',
+  'shopsphere_review_instruction',
+  'shopsphere_demo_payment_instruction',
+  'shopsphere_confirmed_instruction',
+  'shopsphere_failed_instruction',
+  'shopsphere_pending_instruction',
+  'shopsphere_unconfirmed_instruction',
+  'shopsphere_empty_cart_instruction',
 ]);
 
-export const AUDIO_KEY_ALIASES: Partial<Record<MessageKey, MessageKey>> = {
-  shopsphere_landing_instruction: 'welcome_instruction',
-  shopsphere_address_instruction: 'address_instruction',
-  shopsphere_payment_instruction: 'method_instruction',
-  shopsphere_review_instruction: 'review_instruction',
-  shopsphere_demo_payment_instruction: 'upi_simulation_instruction',
-  shopsphere_confirmed_instruction: 'success_instruction',
-  shopsphere_failed_instruction: 'failed_instruction',
-  shopsphere_pending_instruction: 'pending_instruction',
-};
+export const AUDIO_KEY_ALIASES: Partial<Record<MessageKey, MessageKey>> = {};
 
 export function hasAudioAsset(key: MessageKey): boolean {
   const resolvedKey = AUDIO_KEY_ALIASES[key] ?? key;

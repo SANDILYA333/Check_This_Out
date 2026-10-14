@@ -74,7 +74,8 @@ const SHOPSPHERE_TARGET_CONFIG: Record<string, readonly string[]> = {
   'select-payment': ['[data-vc-target="confirm-payment-method"]', '[data-vc-target="select-payment"]'],
   'confirm-order-review': ['[data-vc-target="confirm-order-review"]', '[data-vc-target="review-continue"]'],
   'review-continue': ['[data-vc-target="confirm-order-review"]', '[data-vc-target="review-continue"]'],
-  'simulate-payment-success': ['[data-vc-target="simulate-payment-success"]'],
+  'simulate-payment-random': ['[data-vc-target="simulate-payment-random"]', '[data-vc-target="simulate-payment-success"]'],
+  'simulate-payment-success': ['[data-vc-target="simulate-payment-random"]', '[data-vc-target="simulate-payment-success"]'],
   'simulate-payment-fail': ['[data-vc-target="simulate-payment-fail"]'],
   'simulate-payment-pending': ['[data-vc-target="simulate-payment-pending"]'],
   'simulate-payment-unconfirmed': ['[data-vc-target="simulate-payment-unconfirmed"]'],
@@ -121,27 +122,34 @@ export class ShopSphereCheckoutAdapter implements SiteAdapter {
         pageState = 'LANDING';
         break;
       case 'product-detail':
+      case 'product_detail':
         pageState = 'PRODUCT_DETAILS';
         break;
       case 'cart':
         pageState = stateAttr === 'empty' ? 'EMPTY_CART' : 'CART';
         break;
       case 'address':
+      case 'checkout_address':
         pageState = 'ADDRESS_SELECTION';
         break;
       case 'delivery':
+      case 'checkout_delivery':
         pageState = 'DELIVERY_SELECTION';
         break;
       case 'payment':
+      case 'checkout_payment':
         pageState = 'PAYMENT_SELECTION';
         break;
       case 'review':
+      case 'checkout_review':
         pageState = 'ORDER_REVIEW';
         break;
       case 'demo-payment':
+      case 'checkout_demo_payment':
         pageState = 'DEMO_PAYMENT';
         break;
       case 'order-result':
+      case 'order_result':
         if (stateAttr === 'confirmed') pageState = 'ORDER_CONFIRMED';
         else if (stateAttr === 'failed') pageState = 'PAYMENT_FAILED';
         else if (stateAttr === 'pending') pageState = 'PAYMENT_PENDING';

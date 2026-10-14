@@ -64,7 +64,7 @@ export interface StoreContextType {
   setSimulatedScenario: (scenario: DemoPaymentOutcome) => void;
   isProcessingPayment: boolean;
   activeOrder: Order | null;
-  simulatePaymentHandoff: () => Promise<void>;
+  simulatePaymentHandoff: (outcomeOverride?: DemoPaymentOutcome) => Promise<void>;
   recheckPendingStatus: () => Promise<void>;
   retryFailedPayment: () => void;
   resetToStore: () => void;
@@ -81,6 +81,11 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Language
   const [language, setLanguageState] = useState<StoreLanguage>('en');
+
+  // Simulation State & Active Order
+  const [simulatedScenario, setSimulatedScenario] = useState<DemoPaymentOutcome>('success');
+  const [isProcessingPayment, setIsProcessingPayment] = useState<boolean>(false);
+  const [activeOrder, setActiveOrder] = useState<Order | null>(null);
 
   // Search & Filter
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory>('all');
@@ -127,13 +132,50 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
+
   useEffect(() => {
     if (typeof document !== 'undefined') {
-      document.body.setAttribute('data-vc-store', 'shopsphere');
-      document.body.setAttribute('data-vc-page', currentPage);
-      document.body.setAttribute('data-vc-lang', language);
+      const handleNext = () => {
+        if (currentPage === 'landing' || currentPage === 'product_detail') {
+          setCurrentPage('cart');
+        } else if (currentPage === 'cart') {
+          setCurrentPage('checkout_address');
+        } else if (currentPage === 'checkout_address') {
+          setCurrentPage('checkout_delivery');
+        } else if (currentPage === 'checkout_delivery') {
+          setCurrentPage('checkout_payment');
+        } else if (currentPage === 'checkout_payment') {
+          setCurrentPage('checkout_review');
+        } else if (currentPage === 'checkout_review') {
+          setCurrentPage('checkout_demo_payment');
+        }
+      };
+
+      const handlePrev = () => {
+        if (currentPage === 'checkout_demo_payment') {
+          setCurrentPage('checkout_review');
+        } else if (currentPage === 'checkout_review') {
+          setCurrentPage('checkout_payment');
+        } else if (currentPage === 'checkout_payment') {
+          setCurrentPage('checkout_delivery');
+        } else if (currentPage === 'checkout_delivery') {
+          setCurrentPage('checkout_address');
+        } else if (currentPage === 'checkout_address') {
+          setCurrentPage('cart');
+        } else if (currentPage === 'cart') {
+          setCurrentPage('landing');
+        }
+      };
+
+      document.addEventListener('voicecheckout:next-step', handleNext);
+      document.addEventListener('voicecheckout:prev-step', handlePrev);
+
+      return () => {
+        document.removeEventListener('voicecheckout:next-step', handleNext);
+        document.removeEventListener('voicecheckout:prev-step', handlePrev);
+      };
     }
-  }, [currentPage, language]);
+  }, [currentPage]);
 
   // Addresses
   const [addresses, setAddresses] = useState<Address[]>([...INITIAL_ADDRESSES]);
@@ -143,10 +185,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [selectedDeliveryId, setSelectedDeliveryId] = useState<'standard' | 'express'>('standard');
   const [selectedPaymentId, setSelectedPaymentId] = useState<string>('demo_upi');
 
-  // Simulation State
-  const [simulatedScenario, setSimulatedScenario] = useState<DemoPaymentOutcome>('success');
-  const [isProcessingPayment, setIsProcessingPayment] = useState<boolean>(false);
-  const [activeOrder, setActiveOrder] = useState<Order | null>(null);
+
 
   // Cart Operations
   const addToCart = (product: Product, quantity: number = 1) => {
@@ -215,6 +254,20 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return Math.max(0, subtotal - discount + deliveryFee);
   }, [subtotal, discount, deliveryFee, cart.length]);
 
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.body.setAttribute('data-vc-store', 'shopsphere');
+      document.body.setAttribute('data-vc-page', currentPage);
+      document.body.setAttribute('data-vc-lang', language);
+      document.body.setAttribute('data-vc-total', total.toString());
+      if (currentPage === 'cart') {
+        document.body.setAttribute('data-vc-state', cart.length === 0 ? 'empty' : 'active');
+      } else if (currentPage === 'order_result') {
+        document.body.setAttribute('data-vc-state', activeOrder?.status || 'confirmed');
+      }
+    }
+  }, [currentPage, language, cart.length, activeOrder?.status, total]);
+
   // Filtered Products
   const filteredProducts = useMemo(() => {
     let result = [...PRODUCTS];
@@ -259,9 +312,14 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   // Payment Simulation
-  const simulatePaymentHandoff = async () => {
+  const simulatePaymentHandoff = async (outcomeOverride?: DemoPaymentOutcome) => {
     setIsProcessingPayment(true);
     setCurrentPage('checkout_demo_payment');
+
+    const scenario = outcomeOverride ?? simulatedScenario;
+    if (outcomeOverride) {
+      setSimulatedScenario(outcomeOverride);
+    }
 
     const selectedAddress = addresses.find((a) => a.id === selectedAddressId) || addresses[0];
     const selectedPayment = PAYMENT_METHODS.find((p) => p.id === selectedPaymentId) || PAYMENT_METHODS[0];
@@ -273,11 +331,11 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     await new Promise((resolve) => setTimeout(resolve, 600));
 
     let orderStatus: 'confirmed' | 'failed' | 'pending' | 'unconfirmed' = 'confirmed';
-    if (simulatedScenario === 'failure') {
+    if (scenario === 'failure') {
       orderStatus = 'failed';
-    } else if (simulatedScenario === 'pending') {
+    } else if (scenario === 'pending') {
       orderStatus = 'pending';
-    } else if (simulatedScenario === 'unconfirmed') {
+    } else if (scenario === 'unconfirmed') {
       orderStatus = 'unconfirmed';
     }
 

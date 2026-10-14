@@ -70,9 +70,9 @@ AUDIO_PHRASES = {
         "hi": "पेज पर सिम्युलेटेड यूपीआई भुगतान विकल्प चुनें, फिर अपने ऑर्डर की समीक्षा करने के लिए जारी रखें पर क्लिक करें।",
     },
     "review_instruction": {
-        "en": "Review your order for the pressure cooker with total amount of one thousand four hundred ninety-nine rupees. Then click confirm order.",
-        "te": "ప్రెషర్ కుక్కర్ కోసం మొత్తం వెయ్యి నాలుగు వందల తొంభై తొమ్మిది రూపాయల ఆర్డర్‌ను సమీక్షించండి. తర్వాత కన్ఫర్మ్ ఆర్డర్ క్లిక్ చేయండి.",
-        "hi": "प्रेशर कुकर के लिए कुल एक हज़ार चार सौ निन्यानवे रुपये के ऑर्डर की समीक्षा करें। फिर कन्फर्म ऑर्डर पर क्लिक करें।",
+        "en": "Review your items, delivery option, payment method, and grand total. Then click confirm order to proceed.",
+        "te": "ఆర్డర్ ఇచ్చే ముందు దయచేసి మీ వస్తువులు, డెలివరీ ఎంపిక, చెల్లింపు పద్ధతి మరియు మొత్తం మొత్తాన్ని సమీక్షించండి. తర్వాత కన్ఫర్మ్ ఆర్డర్ క్లిక్ చేయండి.",
+        "hi": "ऑर्डर देने से पहले कृपया अपने सामान, डिलीवरी विकल्प, भुगतान विधि और कुल राशि की समीक्षा करें। फिर कन्फर्म ऑर्डर पर क्लिक करें।",
     },
     "upi_simulation_instruction": {
         "en": "This is a simulated UPI payment screen. Never tell anyone your PIN. Click confirm simulated payment to proceed.",
@@ -85,9 +85,9 @@ AUDIO_PHRASES = {
         "hi": "आपका सिम्युलेटेड भुगतान प्रोसेस हो रहा है। स्थिति की जांच करते समय कृपया थोड़ा इंतजार करें।",
     },
     "success_instruction": {
-        "en": "Simulated payment successful! Your demo order for the pressure cooker has been placed.",
-        "te": "అనుకరణ చెల్లింపు విజయవంతమైంది! ప్రెషర్ కుక్కర్ కోసం మీ డెమో ఆర్డర్ పూర్తయింది.",
-        "hi": "सिम्युलेटेड भुगतान सफल रहा! प्रेशर कुकर के लिए आपका डेमो ऑर्डर पूरा हो गया है।",
+        "en": "Simulated payment successful! Your demo order has been placed.",
+        "te": "అనుకరణ చెల్లింపు విజయవంతమైంది! మీ డెమో ఆర్డర్ పూర్తయింది.",
+        "hi": "सिम्युलेटेड भुगतान सफल रहा! आपका डेमो ऑर्डर पूरा हो गया है।",
     },
     "failed_instruction": {
         "en": "Simulated payment failed. No money was deducted. You can click retry payment to try again safely.",
@@ -112,11 +112,11 @@ AUDIO_PHRASES = {
         "hi": "अपना पिन कभी किसी को न बताएं।",
     },
 
-    # Fixed Spoken Price Wording
+    # Spoken Price Wording
     "order_total_spoken": {
-        "en": "Total amount is one thousand four hundred ninety-nine rupees.",
-        "te": "మొత్తం వెయ్యి నాలుగు వందల తొంభై తొమ్మిది రూపాయలు.",
-        "hi": "कुल राशि एक हज़ार चार सौ निन्यानवे रुपये है।",
+        "en": "Your grand total amount is one thousand five hundred ninety-eight rupees.",
+        "te": "మీ ఆర్డర్ మొత్తం మొత్తం వెయ్యి ఐదు వందల తొంభై ఎనిమిది రూపాయలు.",
+        "hi": "आपके ऑर्डर की कुल राशि एक हज़ार पाँच सौ अट्ठानवे रुपये है।",
     },
 
     # Informational notices
@@ -135,11 +135,97 @@ AUDIO_PHRASES = {
         "te": "ఈ పేజీకి వాయిస్‌చెక్అవుట్ మద్దతు లేదు. వాయిస్‌చెక్అవుట్ డెమో చెక్అవుట్ పేజీలో మాత్రమే పనిచేస్తుంది.",
         "hi": "यह पेज वॉइसचेकआउट द्वारा समर्थित नहीं है। वॉइसचेकआउट केवल नियंत्रित डेमो चेकआउट पेज पर काम करता है।",
     },
+
+    # ShopSphere Guidance Stages — Fully Dedicated Audio
+    "shopsphere_landing_instruction": {
+        "en": "Welcome! Browse the products and choose an item you would like to buy.",
+        "te": "స్వాగతం! ఉత్పత్తులను బ్రౌజ్ చేయండి మరియు మీరు కొనాలనుకుంటున్న వస్తువును ఎంచుకోండి.",
+        "hi": "स्वागत है! उत्पादों को ब्राउज़ करें और वह आइटम चुनें जिसे आप खरीदना चाहते हैं।",
+    },
+    "shopsphere_product_instruction": {
+        "en": "Review the product details, choose the quantity, and add it to your cart.",
+        "te": "ఉత్పత్తి వివరాలను సమీక్షించండి, పరిమాణాన్ని ఎంచుకోండి మరియు మీ కార్ట్‌కు జోడించండి.",
+        "hi": "उत्पाद विवरण की समीक्षा करें, मात्रा चुनें और इसे अपने कार्ट में जोड़ें।",
+    },
+    "shopsphere_cart_instruction": {
+        "en": "Review your items and total, then continue to checkout when you are ready.",
+        "te": "మీ వస్తువులను మరియు మొత్తాన్ని సమీక్షించండి, సిద్ధంగా ఉన్నప్పుడు చెక్అవుట్‌కు కొనసాగండి.",
+        "hi": "अपने आइटम और कुल राशि की समीक्षा करें, फिर तैयार होने पर चेकआउट जारी रखें।",
+    },
+    "shopsphere_address_instruction": {
+        "en": "Select a demonstration delivery address or add a sample address to continue.",
+        "te": "కొనసాగడానికి డెమో డెలివరీ చిరునామాను ఎంచుకోండి లేదా నమూనా చిరునామాను జోడించండి.",
+        "hi": "जारी रखने के लिए एक डेमो डिलीवरी पता चुनें या एक नमूना पता जोड़ें।",
+    },
+    "shopsphere_delivery_instruction": {
+        "en": "Choose your preferred demonstration delivery option.",
+        "te": "మీకు నచ్చిన డెమో డెలివరీ ఎంపికను ఎంచుకోండి.",
+        "hi": "अपना पसंदीदा डेमो डिलीवरी विकल्प चुनें।",
+    },
+    "shopsphere_payment_instruction": {
+        "en": "Choose a simulated payment method. No real payment will be made.",
+        "te": "సిమ్యులేటెడ్ చెల్లింపు పద్ధతిని ఎంచుకోండి. ఎటువంటి నిజమైన చెల్లింపు జరగదు.",
+        "hi": "एक सिम्युलेटेड भुगतान विधि चुनें। कोई वास्तविक भुगतान नहीं किया जाएगा।",
+    },
+    "shopsphere_review_instruction": {
+        "en": "Review your items, delivery option, payment method, and grand total before continuing.",
+        "te": "కొనసాగడానికి ముందు మీ వస్తువులు, డెలివరీ ఎంపిక, చెల్లింపు పద్ధతి మరియు మొత్తం మొత్తాన్ని సమీక్షించండి.",
+        "hi": "आगे बढ़ने से पहले अपने सामान, डिलीवरी विकल्प, भुगतान विधि और कुल राशि की समीक्षा करें।",
+    },
+    "shopsphere_demo_payment_instruction": {
+        "en": "This is a simulated payment. A test outcome is being randomly selected among success, failure, and pending.",
+        "te": "ఇది అనుకరణ చెల్లింపు. విజయం, వైఫల్యం లేదా పెండింగ్‌లలో ఒక ఫలితం యాదృచ్ఛికంగా ఎంపిక చేయబడుతోంది.",
+        "hi": "यह एक सिम्युलेटेड भुगतान है। सफलता, विफलता या लंबित में से एक परिणाम यादृच्छिक रूप से चुना जा रहा है।",
+    },
+    "shopsphere_confirmed_instruction": {
+        "en": "Your demonstration order is confirmed. No real purchase was made.",
+        "te": "మీ డెమో ఆర్డర్ నిర్ధారించబడింది. నిజమైన కొనుగోలు ఏదీ జరగలేదు.",
+        "hi": "आपका प्रदर्शन ऑर्डर कन्फर्म हो गया है। कोई वास्तविक खरीदारी नहीं की गई है।",
+    },
+    "shopsphere_failed_instruction": {
+        "en": "The simulated payment failed. No real payment was made.",
+        "te": "సిమ్యులేటెడ్ చెల్లింపు విఫలమైంది. నిజమైన చెల్లింపు ఏదీ జరగలేదు.",
+        "hi": "सिम्युलेटेड भुगतान विफल रहा। कोई वास्तविक भुगतान नहीं किया गया।",
+    },
+    "shopsphere_pending_instruction": {
+        "en": "The simulated result is pending. It has not been confirmed.",
+        "te": "సిమ్యులేటెడ్ ఫలితం పెండింగ్‌లో ఉంది. ఇది నిర్ధారించబడలేదు.",
+        "hi": "सिम्युलेटेड परिणाम लंबित है। इसकी पुष्टि नहीं हुई है।",
+    },
+    "shopsphere_unconfirmed_instruction": {
+        "en": "The demonstration result could not be verified. It has not been marked as successful.",
+        "te": "డెమో ఫలితాన్ని ధృవీకరించడం సాధ్యం కాలేదు. ఇది విజయవంతమైనదిగా గుర్తించబడలేదు.",
+        "hi": "डेमो परिणाम की पुष्टि नहीं की जा सकी। इसे सफल नहीं माना गया है।",
+    },
+    "shopsphere_empty_cart_instruction": {
+        "en": "Your ShopSphere cart is empty. Add a product to your cart to begin checkout.",
+        "te": "మీ షాప్‌స్పియర్ కార్ట్ ఖాళీగా ఉంది. చెక్‌అవుట్ ప్రారంభించడానికి మీ కార్ట్‌కి ఒక ఉత్పత్తిని జోడించండి.",
+        "hi": "आपका शॉपस्फीयर कार्ट खाली है। चेकआउट शुरू करने के लिए कार्ट में उत्पाद जोड़ें।",
+    },
+}
+
+# Force re-generation for these keys to wipe out any legacy "pressure cooker 1499" text
+FORCE_REGEN_KEYS = {
+    "review_instruction",
+    "success_instruction",
+    "order_total_spoken",
+    "shopsphere_landing_instruction",
+    "shopsphere_product_instruction",
+    "shopsphere_cart_instruction",
+    "shopsphere_address_instruction",
+    "shopsphere_delivery_instruction",
+    "shopsphere_payment_instruction",
+    "shopsphere_review_instruction",
+    "shopsphere_demo_payment_instruction",
+    "shopsphere_confirmed_instruction",
+    "shopsphere_failed_instruction",
+    "shopsphere_pending_instruction",
+    "shopsphere_unconfirmed_instruction",
+    "shopsphere_empty_cart_instruction",
 }
 
 async def generate_file(sem: asyncio.Semaphore, lang: str, key: str, text: str, output_path: Path):
-    if output_path.exists() and output_path.stat().st_size > 0:
-        print(f"[{lang}] Skipping existing {key}.mp3 ({output_path.stat().st_size} bytes)")
+    if key not in FORCE_REGEN_KEYS and output_path.exists() and output_path.stat().st_size > 0:
         return
 
     voice = VOICES[lang]
@@ -161,7 +247,7 @@ async def generate_file(sem: asyncio.Semaphore, lang: str, key: str, text: str, 
 
 async def main():
     base_dir = Path(__file__).resolve().parent.parent / "public" / "audio"
-    sem = asyncio.Semaphore(2)
+    sem = asyncio.Semaphore(4)
     tasks = []
     
     print(f"Starting audio generation targeting {base_dir}...")

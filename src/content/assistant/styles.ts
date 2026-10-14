@@ -447,6 +447,161 @@ export const ASSISTANT_STYLES = `
   font-size: 0.85rem;
 }
 
+/* ShopSphere Assistant Theme */
+.voicecheckout-panel {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 14px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+  z-index: 2147483647;
+  font-family: inherit;
+  transition: box-shadow 0.2s ease;
+}
+
+.voicecheckout-header {
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  color: #ffffff;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+}
+
+.voicecheckout-header:active {
+  cursor: grabbing;
+}
+
+.voicecheckout-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.voicecheckout-logo-icon {
+  font-size: 16px;
+}
+
+.voicecheckout-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.voicecheckout-icon-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #ffffff;
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  transition: background 0.15s ease;
+}
+
+.voicecheckout-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.voicecheckout-body {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #ffffff;
+}
+
+.voicecheckout-instructions {
+  background: #f8fafc;
+  border-left: 4px solid #2563eb;
+  padding: 10px 12px;
+  border-radius: 4px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #1e293b;
+}
+
+.voicecheckout-instructions p {
+  margin: 0;
+}
+
+.voicecheckout-replay-btn:hover {
+  filter: brightness(1.1);
+}
+
+.voicecheckout-footer {
+  padding: 10px 16px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: #64748b;
+}
+
+.voicecheckout-version-tag {
+  font-size: 10.5px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.voicecheckout-text-btn {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.voicecheckout-minimized-badge {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  color: #ffffff;
+  padding: 10px 18px;
+  border-radius: 9999px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 2147483647;
+  font-weight: 700;
+  font-size: 13px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.voicecheckout-minimized-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px -4px rgba(0, 0, 0, 0.35);
+}
+
 /* Responsive adjustment for small screens */
 @media (max-width: 400px) {
   :host {
@@ -454,7 +609,8 @@ export const ASSISTANT_STYLES = `
     right: 10px;
     left: 10px;
   }
-  .assistant-panel {
+  .assistant-panel,
+  .voicecheckout-panel {
     width: 100%;
   }
 }
