@@ -4,7 +4,9 @@
   "description": "VoiceCheckout - Chrome extension for voice-guided checkout",
   "main": "index.html",
   "scripts": {
-    "build": "rm -rf dist && vite build && vite build --config vite.content.config.ts && tsc --noEmit && cp manifest.json dist/ && cp -r public/icons dist/ && cp dist/public/popup.html dist/popup.html",
+    "dev": "vite",
+    "preview": "vite preview",
+    "build": "rm -rf dist && vite build && vite build --config vite.content.config.ts && vite build --config vite.store.config.ts && tsc --noEmit && cp manifest.json dist/ && cp -r public/icons dist/ && cp dist/public/popup.html dist/popup.html && cp index.html dist/index.html",
     "typecheck": "tsc --noEmit",
     "test": "node --test tests/unit/*.test.ts"
   },

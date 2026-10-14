@@ -9,6 +9,9 @@ import { AssistantApp, type AssistantAppProps } from './AssistantApp.ts';
 import { AmazonGuidanceController } from './amazonGuidanceController.ts';
 import { AmazonActionObserver } from './amazonActionObserver.ts';
 import { AmazonAssistantApp } from './AmazonAssistantApp.ts';
+import { ShopSphereGuidanceController } from './shopsphereGuidanceController.ts';
+import { ShopSphereActionObserver } from './shopsphereActionObserver.ts';
+import { ShopSphereAssistantApp } from './ShopSphereAssistantApp.ts';
 import { ASSISTANT_STYLES } from './styles.ts';
 import { audioService } from '../../audio/index.ts';
 import type { PaymentCoordinator } from '../../payments/paymentCoordinator.ts';
@@ -29,10 +32,12 @@ let activeHost: HTMLElement | null = null;
 let activeReactRoot: { unmount: () => void } | null = null;
 let activeController: GuidanceController | null = null;
 let activeAmazonController: AmazonGuidanceController | null = null;
+let activeShopSphereController: ShopSphereGuidanceController | null = null;
 let activeCoordinator: PaymentCoordinator | null = null;
 let activeHighlighter: TargetHighlighter | null = null;
 let activeObserver: ActionObserver | null = null;
 let activeAmazonObserver: AmazonActionObserver | null = null;
+let activeShopSphereObserver: ShopSphereActionObserver | null = null;
 let activeAdapter: SiteAdapter | null = null;
 
 export function isAssistantMounted(): boolean {
@@ -41,6 +46,10 @@ export function isAssistantMounted(): boolean {
 
 export function getActiveController(): GuidanceController | null {
   return activeController ?? (activeAmazonController as unknown as GuidanceController);
+}
+
+export function getActiveShopSphereController(): ShopSphereGuidanceController | null {
+  return activeShopSphereController;
 }
 
 export function getActiveAmazonController(): AmazonGuidanceController | null {
@@ -184,10 +193,63 @@ export function mountAssistant(doc?: Document, options?: MountOptions): boolean 
       activeReactRoot = root;
       activeController = null;
       activeAmazonController = amazonController;
+      activeShopSphereController = null;
       activeCoordinator = null;
       activeHighlighter = highlighter;
       activeObserver = null;
       activeAmazonObserver = amazonObserver;
+      activeShopSphereObserver = null;
+      activeAdapter = adapter;
+
+      return true;
+    }
+
+    // 8b. ShopSphere Controlled Storefront flow
+    if (adapter.siteId === 'shopsphere-demo') {
+      const shopsphereController = new ShopSphereGuidanceController(adapter, 'en', targetDoc);
+      const shopsphereObserver = new ShopSphereActionObserver({
+        controller: shopsphereController,
+        highlighter,
+        adapter,
+        doc: targetDoc,
+      });
+
+      let root: { unmount: () => void };
+      if (options?.render) {
+        root = options.render(container as unknown as HTMLElement, {
+          controller: null as unknown as GuidanceController,
+          highlighter,
+          onClose: () => unmountAssistant(targetDoc),
+        });
+      } else if (typeof window === 'undefined') {
+        root = { unmount: () => {} };
+      } else {
+        const reactRoot: Root = ReactDOM.createRoot(container);
+        reactRoot.render(
+          React.createElement(
+            React.StrictMode,
+            null,
+            React.createElement(ShopSphereAssistantApp, {
+              controller: shopsphereController,
+              highlighter,
+              onClose: () => unmountAssistant(targetDoc),
+            })
+          )
+        );
+        root = reactRoot;
+      }
+
+      // Store references for lifecycle tracking
+      activeHost = host as unknown as HTMLElement;
+      activeReactRoot = root;
+      activeController = null;
+      activeAmazonController = null;
+      activeShopSphereController = shopsphereController;
+      activeCoordinator = null;
+      activeHighlighter = highlighter;
+      activeObserver = null;
+      activeAmazonObserver = null;
+      activeShopSphereObserver = shopsphereObserver;
       activeAdapter = adapter;
 
       return true;
@@ -218,10 +280,12 @@ export function mountAssistant(doc?: Document, options?: MountOptions): boolean 
     activeReactRoot = root;
     activeController = controller;
     activeAmazonController = null;
+    activeShopSphereController = null;
     activeCoordinator = coordinator ?? null;
     activeHighlighter = highlighter;
     activeObserver = actionObserver;
     activeAmazonObserver = null;
+    activeShopSphereObserver = null;
     activeAdapter = adapter;
 
     return true;
@@ -265,6 +329,10 @@ export function unmountAssistant(doc?: Document): void {
     activeAmazonObserver.disconnect();
     activeAmazonObserver = null;
   }
+  if (activeShopSphereObserver) {
+    activeShopSphereObserver.disconnect();
+    activeShopSphereObserver = null;
+  }
 
   // 3. Clear target highlight and restore original inline styles
   if (activeHighlighter) {
@@ -280,6 +348,10 @@ export function unmountAssistant(doc?: Document): void {
   if (activeAmazonController) {
     activeAmazonController.destroy();
     activeAmazonController = null;
+  }
+  if (activeShopSphereController) {
+    activeShopSphereController.destroy();
+    activeShopSphereController = null;
   }
   if (activeCoordinator) {
     activeCoordinator = null;

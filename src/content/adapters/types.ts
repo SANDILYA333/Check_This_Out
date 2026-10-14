@@ -3,7 +3,7 @@ import type { TargetLookupResult } from '../targets/targetRegistry.ts';
 import type { GuidanceController } from '../assistant/guidanceController.ts';
 import type { PaymentCoordinator } from '../../payments/paymentCoordinator.ts';
 
-export type SiteId = 'demo' | 'amazon_in' | 'unsupported';
+export type SiteId = 'demo' | 'amazon_in' | 'shopsphere-demo' | 'unsupported';
 
 export type SupportFailureReason =
   | 'missing_document'
@@ -34,10 +34,27 @@ export type AmazonPageState =
   | 'UNSUPPORTED'
   | 'UNVERIFIED';
 
+export type ShopSpherePageState =
+  | 'LANDING'
+  | 'PRODUCT_DETAILS'
+  | 'CART'
+  | 'ADDRESS_SELECTION'
+  | 'DELIVERY_SELECTION'
+  | 'PAYMENT_SELECTION'
+  | 'ORDER_REVIEW'
+  | 'DEMO_PAYMENT'
+  | 'ORDER_CONFIRMED'
+  | 'PAYMENT_FAILED'
+  | 'PAYMENT_PENDING'
+  | 'RESULT_UNCONFIRMED'
+  | 'EMPTY_CART'
+  | 'UNSUPPORTED'
+  | 'UNVERIFIED';
+
 export interface PageObservation {
   readonly supported: boolean;
   readonly siteId: SiteId;
-  readonly pageState?: AmazonPageState | string;
+  readonly pageState?: AmazonPageState | ShopSpherePageState | string;
   readonly unverifiedReason?: string;
 }
 

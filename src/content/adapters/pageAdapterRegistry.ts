@@ -2,7 +2,10 @@ import type { SiteAdapter } from './types.ts';
 import { demoCheckoutAdapter } from './demoCheckoutAdapter.ts';
 import { amazonCheckoutAdapter } from './amazonCheckoutAdapter.ts';
 
-const registry: SiteAdapter[] = [demoCheckoutAdapter, amazonCheckoutAdapter];
+const registry: SiteAdapter[] = [
+  demoCheckoutAdapter,
+  amazonCheckoutAdapter,
+];
 
 /**
  * Registers a site adapter into the global adapter registry.
@@ -63,7 +66,7 @@ export function getRegisteredAdapters(): readonly SiteAdapter[] {
 }
 
 /**
- * Resets the adapter registry to the initial baseline (containing demo and amazon adapters).
+ * Resets the adapter registry to the initial baseline (containing demo, shopsphere, and amazon adapters).
  * Useful for test isolation.
  */
 export function resetAdapterRegistry(): void {

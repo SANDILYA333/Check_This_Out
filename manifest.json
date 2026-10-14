@@ -31,7 +31,11 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["audio/*"],
+      "resources": [
+        "audio/*",
+        "audio/*/*",
+        "audio/**/*"
+      ],
       "matches": ["<all_urls>"]
     }
   ]

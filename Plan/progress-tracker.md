@@ -263,3 +263,31 @@ The extension must be user-invoked, highlight verified page controls without cli
   - Seamlessly cancels previous speech on language switch, track switch, or assistant unmount.
 - **Test Coverage:** Added `tests/unit/speechFallback.test.ts` with 17 tests covering all 15 requirements. Total tests: 288 passing tests across 23 test suites. Typecheck and build pass cleanly.
 
+### ShopSphere Controlled Storefront & Extension Integration Milestone (Completed & Verified)
+
+- **Storefront Application (`ShopSphere`):**
+  - Built a complete, modern, responsive Indian marketplace storefront under `src/storefront/` and `shopsphere.html`.
+  - Complete marketplace header with synthetic delivery location, product search, language selector (English, Hindi, Telugu), live cart counter, and demo badges.
+  - Category navigation bar filtering across Electronics, Home & Kitchen, Fashion, Books, Fitness, and Daily Essentials.
+  - Compelling hero section with interactive VoiceCheckout demo explanation banner and direct call to action (`data-vc-target="hero-shop"`).
+  - Curated catalog of 14 marketplace products with INR pricing, ratings, badges, review counts, feature bullet points, and crisp offline SVG illustrations.
+  - Responsive product cards with "Add to Cart" and "View Details" actions.
+  - Interactive product details page with quantity selector, stock status, delivery estimates, feature list, and breadcrumb navigation.
+  - Fully functional shopping cart with quantity adjustment, item removal, clear cart confirmation, and live recalculation of subtotal, demo discount (₹100 off >= ₹1,500), delivery fee (free standard delivery >= ₹999; express ₹99), and final total. Cart state is persisted to `localStorage`.
+  - Complete multi-stage checkout stepper: Address Selection (synthetic Indian demo addresses) → Delivery Options → Payment Simulation (Demo UPI, Demo Card, Simulated COD) → Order Review → Simulated Payment Processing (Success, Failure, Pending, Unconfirmed) → Order Result screens with clear simulation labeling.
+- **Extension Integration (`shopsphere-demo` SiteAdapter):**
+  - Implemented `ShopSphereCheckoutAdapter` in `src/content/adapters/shopsphereCheckoutAdapter.ts` conforming strictly to `SiteAdapter`.
+  - Precise detection via `#shopsphere-root`, `data-vc-store="shopsphere"`, and `data-vc-page`.
+  - Absolute isolation: ShopSphere adapter rejects Amazon documents; Amazon adapter rejects ShopSphere.
+  - Target lookup verifying existence, connection, visibility, uniqueness, and enabled state for all storefront targets (`hero-shop`, `product-search`, `add-to-cart`, `cart-button`, `proceed-to-checkout`, `confirm-address`, `confirm-delivery`, `confirm-payment-method`, `confirm-order-review`, `simulate-payment-success`, `simulate-payment-fail`, `simulate-payment-pending`, `simulate-payment-unconfirmed`, `continue-shopping`, `retry-payment`, `recheck-status`).
+  - Read-only action observation in `ShopSphereActionObserver` watching DOM mutations and coordinating target highlighting without triggering clicks.
+  - Real assistant UI mounted via isolated Shadow DOM with drag-and-drop, minimize, live step indicator, multilingual instructions, and audio playback.
+  - Audio asset alias mapping reusing high-quality neural bundled MP3s for matching ShopSphere prompts, with seamless browser `speechSynthesis` fallback.
+  - Manifest V3 `web_accessible_resources` updated to support nested audio paths (`audio/*`, `audio/*/*`, `audio/**/*`).
+- **Automated Verification:**
+  - 332 total automated tests passing across 25 test suites (0 failures, 0 skipped).
+  - 44 new tests added in `tests/unit/shopsphereAdapter.test.ts` (19 tests) and `tests/unit/shopsphereStorefront.test.ts` (25 tests).
+  - `npm run typecheck` (`tsc --noEmit`) passes with 0 errors.
+  - `npm run build` succeeds cleanly producing standalone bundles for popup (142.96 kB), content script (246.79 kB), and storefront (210.21 kB JS + 12.22 kB CSS).
+
+

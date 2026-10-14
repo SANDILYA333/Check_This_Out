@@ -50,6 +50,21 @@ export const enDictionary: LocalizationDictionary = {
   amazon_outcome_pending: 'Your order or payment is currently processing on Amazon. Please check your status directly on Amazon before trying again.',
   amazon_outcome_failed: 'Amazon indicated an issue completing your order. Please check your payment method or account on Amazon.',
 
+  // ShopSphere guidance stages
+  shopsphere_landing_instruction: 'Welcome! Browse the products and choose an item you would like to buy.',
+  shopsphere_product_instruction: 'Review the product details, choose the quantity, and add it to your cart.',
+  shopsphere_cart_instruction: 'Review your items and total, then continue to checkout when you are ready.',
+  shopsphere_address_instruction: 'Select a demonstration delivery address or add a sample address to continue.',
+  shopsphere_delivery_instruction: 'Choose your preferred demonstration delivery option.',
+  shopsphere_payment_instruction: 'Choose a simulated payment method. No real payment will be made.',
+  shopsphere_review_instruction: 'Review your items, delivery choice, payment method, and total before continuing.',
+  shopsphere_demo_payment_instruction: 'This is a simulated payment. Choose a test outcome to continue.',
+  shopsphere_confirmed_instruction: 'Your demonstration order is confirmed. No real purchase was made.',
+  shopsphere_failed_instruction: 'The simulated payment failed. No real payment was made.',
+  shopsphere_pending_instruction: 'The simulated result is pending. It has not been confirmed.',
+  shopsphere_unconfirmed_instruction: 'The demonstration result could not be verified. It has not been marked as successful.',
+  shopsphere_empty_cart_instruction: 'Your ShopSphere cart is empty. Add a product to your cart to begin checkout.',
+
   // Payment safety and recovery
   status_check_error: 'Unable to verify payment status. Please try checking again.',
   payment_unresolved: 'Payment status could not be verified. It remains unresolved.',

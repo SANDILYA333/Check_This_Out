@@ -50,6 +50,21 @@ export const hiDictionary: LocalizationDictionary = {
   amazon_outcome_pending: 'अमेज़न पर आपका ऑर्डर या भुगतान अभी प्रोसेस हो रहा है। दोबारा प्रयास करने से पहले कृपया सीधे अमेज़न पर अपनी स्थिति जांचें।',
   amazon_outcome_failed: 'अमेज़न ने आपका ऑर्डर पूरा करने में समस्या का संकेत दिया है। कृपया अमेज़न पर अपनी भुगतान विधि या खाता जांचें।',
 
+  // ShopSphere guidance stages
+  shopsphere_landing_instruction: 'स्वागत है! उत्पादों को ब्राउज़ करें और वह वस्तु चुनें जिसे आप खरीदना चाहते हैं।',
+  shopsphere_product_instruction: 'उत्पाद का विवरण देखें, मात्रा चुनें और इसे अपने कार्ट में जोड़ें।',
+  shopsphere_cart_instruction: 'अपनी वस्तुओं और कुल राशि की समीक्षा करें, फिर तैयार होने पर चेकआउट जारी रखें।',
+  shopsphere_address_instruction: 'जारी रखने के लिए एक डेमो डिलीवरी पता चुनें या एक नमूना पता जोड़ें।',
+  shopsphere_delivery_instruction: 'अपना पसंदीदा डेमो डिलीवरी विकल्प चुनें।',
+  shopsphere_payment_instruction: 'एक सिम्युलेटेड भुगतान विधि चुनें। कोई वास्तविक भुगतान नहीं किया जाएगा।',
+  shopsphere_review_instruction: 'जारी रखने से पहले अपनी वस्तुओं, डिलीवरी विकल्प, भुगतान विधि और कुल राशि की समीक्षा करें।',
+  shopsphere_demo_payment_instruction: 'यह एक सिम्युलेटेड भुगतान है। जारी रखने के लिए एक परीक्षण परिणाम चुनें।',
+  shopsphere_confirmed_instruction: 'आपका डेमो ऑर्डर कन्फर्म हो गया है। कोई वास्तविक खरीदारी नहीं की गई।',
+  shopsphere_failed_instruction: 'सिम्युलेटेड भुगतान विफल रहा। कोई वास्तविक भुगतान नहीं किया गया।',
+  shopsphere_pending_instruction: 'सिम्युलेटेड परिणाम लंबित है। इसकी पुष्टि नहीं हुई है।',
+  shopsphere_unconfirmed_instruction: 'डेमो परिणाम सत्यापित नहीं किया जा सका। इसे सफल के रूप में चिह्नित नहीं किया गया है।',
+  shopsphere_empty_cart_instruction: 'आपका शॉपस्फ़ीयर कार्ट खाली है। चेकआउट शुरू करने के लिए अपने कार्ट में उत्पाद जोड़ें।',
+
   // Payment safety and recovery
   status_check_error: 'भुगतान स्थिति की पुष्टि नहीं हो सकी। कृपया पुनः प्रयास करें।',
   payment_unresolved: 'भुगतान स्थिति की पुष्टि नहीं हो सकी। यह अनिर्णीत है।',

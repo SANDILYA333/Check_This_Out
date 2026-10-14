@@ -1,4 +1,5 @@
-import { resolveAdapter } from './adapters/pageAdapterRegistry.ts';
+import { registerAdapter, resolveAdapter } from './adapters/pageAdapterRegistry.ts';
+import { shopsphereCheckoutAdapter } from './adapters/shopsphereCheckoutAdapter.ts';
 import { isExtensionRequest } from '../shared/messaging/contracts.ts';
 import {
   mountAssistant,
@@ -7,6 +8,9 @@ import {
 } from './assistant/lifecycle.ts';
 import { mockPaymentService } from '../payments/mockPaymentService.ts';
 import type { PaymentScenario } from '../payments/types.ts';
+
+// Register ShopSphere controlled storefront adapter
+registerAdapter(shopsphereCheckoutAdapter);
 
 // Synchronize scenario configuration from the host demo page
 if (typeof document !== 'undefined') {
